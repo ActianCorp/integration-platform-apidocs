@@ -1,0 +1,565 @@
+---
+swagger: "2.0"
+info:
+  description: "Manage access policies."
+  version: "3.1.1-SNAPSHOT"
+  title: "Access Control Policies"
+host: "api.im.actiandatacloud.com"
+basePath: "/v2/api"
+tags:
+- name: "@Login"
+- name: "Policy"
+- name: "Policy Assignment"
+schemes:
+- "https"
+paths:
+  /access/policies:
+    get:
+      tags:
+      - "Policy"
+      summary: "Retrieve a list of access policies. Rules for each policy will be\
+        \ included, but will eventually be deprecated so that rules must be requested\
+        \ separately. Account Admin role required."
+      description: ""
+      operationId: "getAccessPolicies"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "offset"
+        in: "query"
+        description: "Page number (zero based)"
+        required: false
+        type: "string"
+      - name: "size"
+        in: "query"
+        description: "Page size"
+        required: false
+        type: "string"
+      - name: "sortby"
+        in: "query"
+        description: "Sort by column name"
+        required: false
+        type: "string"
+      - name: "direction"
+        in: "query"
+        description: "Sort direction (asc or desc)"
+        required: false
+        type: "string"
+      - name: "filter"
+        in: "query"
+        description: "Filter (access policy name)"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/AccessPolicyListReponse"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Access Denied"
+      security:
+      - Bearer token: []
+    post:
+      tags:
+      - "Policy"
+      summary: "Create a new access policy. Account Admin role required."
+      description: ""
+      operationId: "createAccessPolicy"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/AccessPolicyRequest"
+      responses:
+        201:
+          description: "Created"
+          schema:
+            $ref: "#/definitions/AccessPolicyResponse"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Access Denied"
+      security:
+      - Bearer token: []
+  /access/policies/{id}:
+    get:
+      tags:
+      - "Policy"
+      summary: "Retrieve an existing access policy, including all it's policy rules.\
+        \ This will eventually be deprecated, so rules should be requested separately.\
+        \ Account Admin role required."
+      description: ""
+      operationId: "getAccessPolicy"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Access policy id"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/AccessPolicyResponse"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Access Denied"
+        404:
+          description: "Not Found"
+      security:
+      - Bearer token: []
+    put:
+      tags:
+      - "Policy"
+      summary: "Update an existing access policy. Account Admin role required."
+      description: ""
+      operationId: "updateAccessPolicy"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Access policy id"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/AccessPolicyRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/AccessPolicyResponse"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Access Denied"
+        404:
+          description: "Not Found"
+      security:
+      - Bearer token: []
+    delete:
+      tags:
+      - "Policy"
+      summary: "Delete an existing access policy. Account Admin role required."
+      description: ""
+      operationId: "deleteAccessPolicy"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Access policy id"
+        required: true
+        type: "string"
+      responses:
+        204:
+          description: "No Content"
+          schema:
+            type: "object"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Access Denied"
+        404:
+          description: "Not Found"
+      security:
+      - Bearer token: []
+  /login:
+    post:
+      tags:
+      - "@Login"
+      summary: "Retrieve an access_token"
+      description: "The access_token value is used in the Authorization header in\
+        \ the format 'Authorization: Bearer [access_token value]' to make other API\
+        \ calls."
+      operationId: "login"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/LoginRequest"
+      responses:
+        200:
+          description: "Access Token"
+          schema:
+            $ref: "#/definitions/AccessTokenResponse"
+        400:
+          description: "Bad Request"
+        401:
+          description: "Inactive, Bad Credentials, or Locked Out"
+  /users/access/policies:
+    get:
+      tags:
+      - "Policy Assignment"
+      summary: "Retrieve a list of access policies for all users in the current account.\
+        \ Account Admin role required."
+      description: ""
+      operationId: "getAllUserAccessPolicies"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "offset"
+        in: "query"
+        description: "Page number (zero based)"
+        required: false
+        type: "string"
+      - name: "size"
+        in: "query"
+        description: "Page size"
+        required: false
+        type: "string"
+      - name: "sortby"
+        in: "query"
+        description: "Sort by column name"
+        required: false
+        type: "string"
+      - name: "direction"
+        in: "query"
+        description: "Sort direction (asc or desc)"
+        required: false
+        type: "string"
+      - name: "filter"
+        in: "query"
+        description: "Filter (user name)"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/AccessPolicyListReponse"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Access Denied"
+      security:
+      - Bearer token: []
+  /users/{userId}/access/policies:
+    get:
+      tags:
+      - "Policy Assignment"
+      summary: "Retrieve a list of access policies currently assigned to a user. Account\
+        \ Admin role required."
+      description: ""
+      operationId: "getUserAccessPolicies"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "User id"
+        required: true
+        type: "string"
+      - name: "offset"
+        in: "query"
+        description: "Page number (zero based)"
+        required: false
+        type: "string"
+      - name: "size"
+        in: "query"
+        description: "Page size"
+        required: false
+        type: "string"
+      - name: "sortby"
+        in: "query"
+        description: "Sort by column name"
+        required: false
+        type: "string"
+      - name: "direction"
+        in: "query"
+        description: "Sort direction (asc or desc)"
+        required: false
+        type: "string"
+      - name: "filter"
+        in: "query"
+        description: "Filter (user name)"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/AccessPolicyListReponse"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Access Denied"
+      security:
+      - Bearer token: []
+    post:
+      tags:
+      - "Policy Assignment"
+      summary: "Assign (one or more) access control policies to a user. Account Admin\
+        \ role required."
+      description: ""
+      operationId: "setUserAccessPolicies"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/UserAccessPolicyRequest"
+      - name: "userId"
+        in: "path"
+        description: "User id"
+        required: true
+        type: "string"
+      responses:
+        201:
+          description: "Created"
+          schema:
+            $ref: "#/definitions/UserAccessPolicyResponse"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Access Denied"
+      security:
+      - Bearer token: []
+  /users/{userId}/access/policies/{accessPolicyId}:
+    put:
+      tags:
+      - "Policy Assignment"
+      summary: "Assign an access policy to a user. Account Admin role required."
+      description: ""
+      operationId: "putUserAccessPolicy"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "User id"
+        required: true
+        type: "string"
+      - name: "accessPolicyId"
+        in: "path"
+        description: "Access Policy id"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/UserAccessPolicyResponse"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Access Denied"
+      security:
+      - Bearer token: []
+    delete:
+      tags:
+      - "Policy Assignment"
+      summary: "Revoke an access policy currently assigned to a user. Account Admin\
+        \ role required."
+      description: ""
+      operationId: "deleteUserAccessPolicy"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "User id"
+        required: true
+        type: "string"
+      - name: "accessPolicyId"
+        in: "path"
+        description: "Access Policy id"
+        required: true
+        type: "string"
+      responses:
+        204:
+          description: "No Content"
+          schema:
+            type: "object"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Access Denied"
+        404:
+          description: "Not Found"
+      security:
+      - Bearer token: []
+securityDefinitions:
+  Bearer token:
+    description: "Enter access_token value from Login. Use format 'Bearer [access_token\
+      \ value]'."
+    type: "apiKey"
+    name: "authorization"
+    in: "header"
+definitions:
+  AccessPolicyListReponse:
+    type: "object"
+    properties:
+      totalRecords:
+        type: "integer"
+        format: "int64"
+      totalPages:
+        type: "integer"
+        format: "int32"
+      size:
+        type: "integer"
+        format: "int32"
+      pageNumber:
+        type: "integer"
+        format: "int32"
+      sortBy:
+        type: "string"
+      direction:
+        type: "string"
+      filter:
+        type: "string"
+      items:
+        type: "array"
+        items:
+          $ref: "#/definitions/AccessPolicyResponse"
+  AccessPolicyRequest:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      description:
+        type: "string"
+      permissions:
+        type: "array"
+        items:
+          $ref: "#/definitions/Permission"
+  AccessPolicyResponse:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      name:
+        type: "string"
+      href:
+        type: "string"
+      description:
+        type: "string"
+      global:
+        type: "boolean"
+      account:
+        $ref: "#/definitions/AccountReference"
+      permissions:
+        type: "array"
+        items:
+          $ref: "#/definitions/Permission"
+      created:
+        type: "string"
+        format: "date-time"
+      createdByUser:
+        $ref: "#/definitions/Reference"
+      lastModified:
+        type: "string"
+        format: "date-time"
+      lastModifiedByUser:
+        $ref: "#/definitions/Reference"
+  AccessTokenResponse:
+    type: "object"
+    properties:
+      access_token:
+        type: "string"
+      token_type:
+        type: "string"
+      expires_in:
+        type: "integer"
+        format: "int64"
+  AccountReference:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      name:
+        type: "string"
+      href:
+        type: "string"
+      customerId:
+        type: "string"
+  LoginRequest:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+      password:
+        type: "string"
+  Permission:
+    type: "object"
+    properties:
+      resourceType:
+        type: "string"
+      allowed:
+        type: "array"
+        uniqueItems: true
+        items:
+          type: "string"
+      resourceIds:
+        type: "array"
+        uniqueItems: true
+        items:
+          type: "string"
+  Reference:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      name:
+        type: "string"
+      href:
+        type: "string"
+  UserAccessPolicyListResponse:
+    type: "object"
+    properties:
+      totalRecords:
+        type: "integer"
+        format: "int64"
+      totalPages:
+        type: "integer"
+        format: "int32"
+      size:
+        type: "integer"
+        format: "int32"
+      pageNumber:
+        type: "integer"
+        format: "int32"
+      sortBy:
+        type: "string"
+      direction:
+        type: "string"
+      filter:
+        type: "string"
+      items:
+        type: "array"
+        items:
+          $ref: "#/definitions/UserAccessPolicyResponse"
+  UserAccessPolicyRequest:
+    type: "object"
+    properties:
+      accessPolicyIds:
+        type: "array"
+        items:
+          type: "string"
+  UserAccessPolicyResponse:
+    type: "object"
+    properties:
+      userId:
+        type: "string"
+      userName:
+        type: "string"
+      accessPolicies:
+        $ref: "#/definitions/AccessPolicyListReponse"
