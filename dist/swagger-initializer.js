@@ -3,14 +3,7 @@ window.onload = function() {
 
   // the following lines will be replaced by docker/configurator, when it runs in a docker-container
   window.ui = SwaggerUIBundle({
-    urls: [
-		{url: "apis/job-configuration.json", name: "Job Configuration"},
-		{url: "apis/job-execution.json", name: "Job Execution"},
-		{url: "apis/job-config-aliasing.json", name: "JobConfig Aliasing"},
-		{url: "apis/agent-management.json", name: "Agents and Devices"},
-		{url: "apis/account-administration.json", name: "Accounts and Users"},
-		{url: "apis/access-control-policies.json", name: "Access Control Policies"}
-	],
+    url: "swagger.yaml",
     dom_id: '#swagger-ui',
     deepLinking: true,
     presets: [
@@ -20,10 +13,7 @@ window.onload = function() {
     plugins: [
       SwaggerUIBundle.plugins.DownloadUrl
     ],
-    layout: "StandaloneLayout",
-	showExtensions: true,
-	tryItOutEnabled: true,
-	persistAuthorization: true
+    layout: "StandaloneLayout"
   });
 
   //</editor-fold>
